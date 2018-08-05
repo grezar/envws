@@ -17,5 +17,5 @@ $ eval $(envws set)
 If you want to specify profile, you can use `--profile` option.
 
 ```
-$ eval $(envws set --profile <profile name>
+$ eval $(envws set --profile <profile name>)
 ```
