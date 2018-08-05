@@ -19,3 +19,10 @@ If you want to specify profile, you can use `--profile` option.
 ```
 $ eval $(envws set --profile <profile name>)
 ```
+
+I recommend you define shell function wrapped envws in ~/.bashrc like below.
+```
+function awsenv() {
+  eval $(envws $@)
+}
+```
