@@ -40,6 +40,12 @@ func main() {
 				},
 			},
 		},
+		{
+			Name:    "unset",
+			Aliases: []string{"u"},
+			Usage:   "Unset AWS credential environment varialbes",
+			Action:  cmdUnset,
+		},
 	}
 	app.Run(os.Args)
 }
@@ -62,4 +68,8 @@ func cmdSet(c *cli.Context) error {
 		}
 	}
 	return nil
+}
+
+func cmdUnset(c *cli.Context) {
+	fmt.Println("unset AWS_ACCESS_KEY_ID ; unset AWS_SECRET_ACCESS_KEY")
 }
