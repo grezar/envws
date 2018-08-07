@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"os/user"
-	"strings"
 
 	"github.com/urfave/cli"
 )
@@ -46,18 +44,25 @@ func main() {
 			Usage:   "Unset AWS credential environment varialbes",
 			Action:  cmdUnset,
 		},
+		{
+			Name:    "list",
+			Aliases: []string{"l"},
+			Usage:   "List aws profiles",
+			Action:  cmdList,
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:  "path",
+					Value: "~/.aws/credentials",
+					Usage: "AWS credential file path",
+				},
+			},
+		},
 	}
 	app.Run(os.Args)
 }
 
 func cmdSet(c *cli.Context) error {
-	usr, err := user.Current()
-	if err != nil {
-		return err
-	}
-	path := strings.Replace(c.String("path"), "~", usr.HomeDir, 1)
-	var profiles []Profile
-	profiles, err = parseAWSCredentials(path)
+	profiles, err := getAWSProfilesWithCredential(c.String("path"))
 	if err != nil {
 		return err
 	}
@@ -72,4 +77,15 @@ func cmdSet(c *cli.Context) error {
 
 func cmdUnset(c *cli.Context) {
 	fmt.Println("unset AWS_ACCESS_KEY_ID ; unset AWS_SECRET_ACCESS_KEY")
+}
+
+func cmdList(c *cli.Context) error {
+	profiles, err := getAWSProfilesWithCredential(c.String("path"))
+	if err != nil {
+		return err
+	}
+	for _, p := range profiles {
+		fmt.Println(p.Name)
+	}
+	return nil
 }
