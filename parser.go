@@ -1,43 +1,52 @@
 package main
 
 import (
-	"bufio"
+	"fmt"
 	"os"
-	"regexp"
-	"strings"
+
+	"github.com/go-ini/ini"
 )
 
-var profileNameRegexp = regexp.MustCompile("^\\[([A-Za-z0-9_-]+)\\]$")
+const (
+	iniDefaultHeader = "DEFAULT"
+)
 
-func parseAWSCredentials(path string) (profiles []Profile, err error) {
-	file, err := os.Open(path)
+func loadCredentialFile(path string) (config *ini.File) {
+	config, err := ini.Load(path)
 	if err != nil {
-		return profiles, err
+		fmt.Printf("Fail to load AWS credential file : %v", err)
+		os.Exit(1)
 	}
-	defer file.Close()
+	return config
+}
 
-	s := bufio.NewScanner(file)
-	var profile Profile
-	for s.Scan() {
-		text := s.Text()
-		fields := strings.Fields(text)
-		if profileNameRegexp.MatchString(text) {
-			matches := profileNameRegexp.FindAllStringSubmatch(text, -1)
-			if err != nil {
-				return profiles, err
-			}
-			for _, match := range matches {
-				profile = Profile{}
-				profile.Name = match[1]
-			}
-		} else if strings.Contains(text, "aws_access_key_id") {
-			profile.Credential.AWSAccessKeyId = fields[len(fields)-1]
-		} else if strings.Contains(text, "aws_secret_access_key") {
-			profile.Credential.AWSSecretAccessKey = fields[len(fields)-1]
-			profiles = append(profiles, profile)
-		} else {
-			continue
+func loadProfile(name, path string) Profile {
+	config := loadCredentialFile(path)
+	profile, err := config.GetSection(name)
+	if err != nil {
+		fmt.Sprintf("failed to load profile %s in %s", profile, path)
+		os.Exit(1)
+	}
+	id, err := profile.GetKey("aws_access_key_id")
+	if err != nil {
+		fmt.Sprintf("shared credentials %s in %s did not contain aws_acces_key_id", profile, path)
+		os.Exit(1)
+	}
+	secret, err := profile.GetKey("aws_secret_access_key")
+	if err != nil {
+		fmt.Sprintf("shared credentials %s in %s did not contain aws_secret_access_key", profile, path)
+		os.Exit(1)
+	}
+	return newProfile(profile.Name(), id.String(), secret.String())
+}
+
+func loadProfileNames(path string) (profileNames []string) {
+	config := loadCredentialFile(path)
+	for _, cs := range config.Sections() {
+		profileName := cs.Name()
+		if profileName != iniDefaultHeader {
+			profileNames = append(profileNames, profileName)
 		}
 	}
-	return profiles, err
+	return profileNames
 }

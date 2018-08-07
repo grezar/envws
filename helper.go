@@ -5,15 +5,11 @@ import (
 	"strings"
 )
 
-func getAWSProfilesWithCredential(path string) (profiles []Profile, err error) {
+func getUserHomeDir(path string) string {
 	usr, err := user.Current()
 	if err != nil {
-		return profiles, err
+		panic(err)
 	}
 	path = strings.Replace(path, "~", usr.HomeDir, 1)
-	profiles, err = parseAWSCredentials(path)
-	if err != nil {
-		return profiles, err
-	}
-	return profiles, err 
+	return path
 }
