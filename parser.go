@@ -7,10 +7,6 @@ import (
 	"strings"
 )
 
-const (
-	reservedWord = "profile"
-)
-
 var profileNameRegexp = regexp.MustCompile("^\\[([A-Za-z0-9_-]+)\\]$")
 
 func parseAWSCredentials(path string) (profiles []Profile, err error) {
