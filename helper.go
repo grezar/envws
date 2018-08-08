@@ -3,8 +3,6 @@ package main
 import (
 	"os/user"
 	"strings"
-
-	"github.com/grezar/envws/credential"
 )
 
 func getUserHomeDir(path string) string {
