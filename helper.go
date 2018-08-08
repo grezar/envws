@@ -7,12 +7,11 @@ import (
 	"github.com/grezar/envws/credential"
 )
 
-func getAWSProfilesWithCredential(path string) (profiles []credential.Profile, err error) {
+func getUserHomeDir(path string) string {
 	usr, err := user.Current()
 	if err != nil {
-		return profiles, err
+		panic(err)
 	}
 	path = strings.Replace(path, "~", usr.HomeDir, 1)
-	profiles = credential.LoadCredential(path)
-	return profiles, err
+	return path
 }

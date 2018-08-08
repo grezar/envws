@@ -61,31 +61,21 @@ func main() {
 	app.Run(os.Args)
 }
 
-func cmdSet(c *cli.Context) error {
-	profiles, err := getAWSProfilesWithCredential(c.String("path"))
-	if err != nil {
-		return err
-	}
-	for _, p := range profiles {
-		if p.Name == c.String("profile") {
-			fmt.Printf("export AWS_ACCESS_KEY_ID=%s ;", string(p.Credential.AWSAccessKeyId))
-			fmt.Printf("export AWS_SECRET_ACCESS_KEY=%s", string(p.Credential.AWSSecretAccessKey))
-		}
-	}
-	return nil
+func cmdSet(c *cli.Context) {
+	path := getUserHomeDir(c.String("path"))
+	profile := loadProfile(c.String("profile"), path)
+	fmt.Printf("export AWS_ACCESS_KEY_ID=%s ;", string(profile.Credential.AWSAccessKeyId))
+	fmt.Printf("export AWS_SECRET_ACCESS_KEY=%s", string(profile.Credential.AWSSecretAccessKey))
 }
 
 func cmdUnset(c *cli.Context) {
 	fmt.Println("unset AWS_ACCESS_KEY_ID ; unset AWS_SECRET_ACCESS_KEY")
 }
 
-func cmdList(c *cli.Context) error {
-	profiles, err := getAWSProfilesWithCredential(c.String("path"))
-	if err != nil {
-		return err
+func cmdList(c *cli.Context) {
+	path := getUserHomeDir(c.String("path"))
+	profileNames := loadProfileNames(path)
+	for _, name := range profileNames {
+		fmt.Println(name)
 	}
-	for _, p := range profiles {
-		fmt.Println(p.Name)
-	}
-	return nil
 }

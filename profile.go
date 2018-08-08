@@ -1,4 +1,4 @@
-package credential
+package main
 
 type Profile struct {
 	Name       string
