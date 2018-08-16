@@ -13,3 +13,12 @@ func getUserHomeDir(path string) string {
 	path = strings.Replace(path, "~", usr.HomeDir, 1)
 	return path
 }
+
+func determineIfEvalCommands(cmd string) bool {
+    for _, ec := range evalCommands {
+        if ec == cmd {
+            return true
+        }
+    }
+    return false
+}

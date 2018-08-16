@@ -13,6 +13,8 @@ const (
 	version     = "0.1.0"
 )
 
+var evalCommands = [2]string{"set", "unset"}
+
 func main() {
 	app := cli.NewApp()
 	app.Name = name
@@ -57,6 +59,18 @@ func main() {
 				},
 			},
 		},
+		{
+			Name:    "eval-commands",
+			Aliases: []string{"e"},
+			Usage:   "Judge whether command require eval or not",
+			Action:  cmdEvalCommands,
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:  "command, c",
+					Usage: "Any one of evnws-helper command",
+				},
+			},
+		},
 	}
 	app.Run(os.Args)
 }
@@ -78,4 +92,9 @@ func cmdList(c *cli.Context) {
 	for _, name := range profileNames {
 		fmt.Println(name)
 	}
+}
+
+func cmdEvalCommands(c *cli.Context) {
+    requireEval := determineIfEvalCommands(c.String("command"))
+    fmt.Println(requireEval)
 }
