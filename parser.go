@@ -3,12 +3,14 @@ package main
 import (
 	"fmt"
 	"os"
+    "strings"
 
 	"github.com/go-ini/ini"
 )
 
 const (
-	iniDefaultHeader = "DEFAULT"
+	iniDefaultHeader       = "DEFAULT"
+    profilePrefixWithSpace = "profile "
 )
 
 func loadCredentialFile(path string) (config *ini.File) {
@@ -44,6 +46,9 @@ func loadProfileNames(path string) (profileNames []string) {
 	config := loadCredentialFile(path)
 	for _, cs := range config.Sections() {
 		profileName := cs.Name()
+        if strings.HasPrefix(profileName, profilePrefixWithSpace) {
+          continue
+        }
 		if profileName != iniDefaultHeader {
 			profileNames = append(profileNames, profileName)
 		}
