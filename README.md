@@ -23,7 +23,7 @@ $ eval $(envws-helper set --profile <profile name>)
 I recommend you define shell function wrapped envws in ~/.bashrc like below.
 ```
 function envws() {
-  if [ "$(envws-helper eval-commands --command $1)" = "true" ]; then
+  if [ "$(envws-helper eval-commands $1)" = "true" ]; then
     eval $(envws-helper $@)
   else
     envws-helper $@
