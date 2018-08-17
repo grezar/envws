@@ -64,12 +64,6 @@ func main() {
 			Aliases: []string{"e"},
 			Usage:   "Judge whether command require eval or not",
 			Action:  cmdEvalCommands,
-			Flags: []cli.Flag{
-				cli.StringFlag{
-					Name:  "command, c",
-					Usage: "Any one of evnws-helper command",
-				},
-			},
 		},
 	}
 	app.Run(os.Args)
@@ -95,6 +89,6 @@ func cmdList(c *cli.Context) {
 }
 
 func cmdEvalCommands(c *cli.Context) {
-    requireEval := determineIfEvalCommands(c.String("command"))
+    requireEval := determineIfEvalCommands(c.Args().Get(0))
     fmt.Println(requireEval)
 }
