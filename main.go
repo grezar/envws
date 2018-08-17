@@ -13,7 +13,7 @@ const (
 	version     = "0.1.0"
 )
 
-var evalCommands = [2]string{"set", "unset"}
+var evalCommands = [4]string{"set", "s", "unset", "u"}
 
 func main() {
 	app := cli.NewApp()
