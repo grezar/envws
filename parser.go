@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	iniDefaultHeader       = "DEFAULT"
+    iniDefaultHeader       = "DEFAULT"
     profilePrefixWithSpace = "profile "
 )
 
