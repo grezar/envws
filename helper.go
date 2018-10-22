@@ -14,7 +14,7 @@ func getUserHomeDir(path string) string {
 	return path
 }
 
-func determineIfEvalCommands(cmd string) bool {
+func judgeWetherEvalCommandOrNot(cmd string) bool {
     for _, ec := range evalCommands {
         if ec == cmd {
             return true

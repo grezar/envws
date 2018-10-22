@@ -60,10 +60,10 @@ func main() {
 			},
 		},
 		{
-			Name:    "eval-commands",
+			Name:    "eval-command",
 			Aliases: []string{"e"},
 			Usage:   "Judge whether command require eval or not",
-			Action:  cmdEvalCommands,
+			Action:  cmdEvalCommand,
 		},
 	}
 	app.Run(os.Args)
@@ -88,7 +88,7 @@ func cmdList(c *cli.Context) {
 	}
 }
 
-func cmdEvalCommands(c *cli.Context) {
-    requireEval := determineIfEvalCommands(c.Args().Get(0))
+func cmdEvalCommand(c *cli.Context) {
+    requireEval := judgeWetherEvalCommandOrNot(c.Args().Get(0))
     fmt.Println(requireEval)
 }
