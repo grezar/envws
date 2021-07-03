@@ -65,6 +65,31 @@ func main() {
 			Usage:   "Judge whether command require eval or not",
 			Action:  cmdEvalCommand,
 		},
+		{
+			Name:    "sts",
+			Usage:   "Get sts session token",
+			Action:  cmdSts,
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:  "path",
+					Value: "~/.aws/credentials",
+					Usage: "AWS credential file path",
+				},
+				cli.StringFlag{
+					Name:  "with-mfa",
+					Usage: "MFA token code",
+				},
+				cli.StringFlag{
+					Name:  "source",
+					Value: "default",
+					Usage: "AWS credential file path",
+				},
+				cli.StringFlag{
+					Name:  "destination",
+					Usage: "AWS credential file path",
+				},
+			},
+		},
 	}
 	app.Run(os.Args)
 }
@@ -91,4 +116,14 @@ func cmdList(c *cli.Context) {
 func cmdEvalCommand(c *cli.Context) {
     requireEval := judgeWetherEvalCommandOrNot(c.Args().Get(0))
     fmt.Println(requireEval)
+}
+
+func cmdSts(c *cli.Context) {
+    sourceAccont := c.String("source")
+    destinationAccount := c.String("destination")
+    if c.String("with-mfa") == true {
+        tokenCode := requestInput()
+    }
+    stsSessionToken := getSessionToken()
+	fmt.Printf("export AWS_SESSION_TOKEN=%s", string(stsSessionToken.SessionToken))
 }
